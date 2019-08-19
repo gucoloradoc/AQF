@@ -1,3 +1,12 @@
+
+## Custom files to ignore
+
+#Ignoring all the large files, have to find a way to add them to the repository
+data/*
+
+
+## --This section ignores all the python generated files
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
