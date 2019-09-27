@@ -4,7 +4,7 @@
 #Ignoring all the large files, have to find a way to add them to the repository
 data/*
 #Ignoring all the large files, have to find a way to add them to the repository
-data/*
+
 .vscode/*
 
 ## --This section ignores all the python generated files
