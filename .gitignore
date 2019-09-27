@@ -2,8 +2,6 @@
 ## Custom files to ignore
 
 #Ignoring all the large files, have to find a way to add them to the repository
-data/*
-#Ignoring all the large files, have to find a way to add them to the repository
 
 .vscode/*
 
