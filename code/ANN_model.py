@@ -1,7 +1,7 @@
 
 import numpy as np
 import pandas as pd
-import keras
+from tensorflow import keras
 
 
 dframe=pd.read_csv("data/Monterrey/imputed/data/NOROESTE.csv", 
@@ -22,7 +22,7 @@ def windows_tensor(dataframe, predictors, target, train_per=0.7, val_per=0.15):
 
 class observations_generator(keras.utils.Sequence):
     """
-    Observation generator, it takes windows of 72 hours and from such widows it generates random observations, to predict 24 lead time taing 24 hours before.
+    Observation generator, it takes windows of 72 hours and from such widows it generates random observations, to predict 24 lead time taking 24 hours before.
     data_source is an array with the location of a complete dataset
     station is the name of the measurement station
     predictors is an array of the desired predictor to be taken into account for the prediction model
@@ -48,19 +48,23 @@ class observations_generator(keras.utils.Sequence):
                 temp=i
             self.indexes.append((temp,np.random.choice(np.array(list(range(24,48))),size=1)[0]))
             c=c+1
-
     #Generate the tensor with
     def __len__(self):
         #Total lenght of the output
-        return(int(self.data_source.shape[0]*self.samples_per_window/self.batch_size))
+        return(self.data_source.shape[0])
+        #Th following line is the legth of the array in case there is a restriction in batch size
+        #return(int(np.ceil(self.data_source.shape[0]*self.samples_per_window/self.batch_size)))
     
     def __getitem__(self, idx):
         ##Generador de observaciones, ojo aca con el significado de cada bache
         self.x_batch= train_win[self.indexes[idx][0],list(range((self.indexes[idx][1]-23),self.indexes[idx][1]+1)),:]
-        return 1
-#Testing zone
+        return self.x_batch
 
+#Testing zone
+#Testing the windows generator (working)
 train_win,val_win,test_win=windows_tensor(dframe, dframe.columns.values[5:8],1)
+#Testing the observation generator 
+
 
 pivot_index=np.random.choice(np.array(list(range(24,48))),size=1)[0]
 train_win[:,list(range((pivot_index-23),pivot_index+1)),:].shape
