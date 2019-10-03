@@ -1,7 +1,7 @@
 
 import numpy as np
 import pandas as pd
-import keras
+from tensorflow import keras
 
 
 dframe=pd.read_csv("data/Monterrey/imputed/data/NOROESTE.csv", 
