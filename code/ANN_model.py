@@ -30,13 +30,9 @@ class observations_generator(keras.utils.Sequence):
     batch_size in the size of the batches to be generated
     """
 
-    def __init__(self, 
-    data_source, station, predictors, target, 
+    def __init__(self, data_source, 
     samples_per_window=5, batch_size=64):
         self.data_source=data_source
-        self.station=station
-        self.predictors=predictors
-        self.target=target
         self.batch_size=batch_size
         self.samples_per_window=samples_per_window
         c=0
@@ -64,7 +60,7 @@ class observations_generator(keras.utils.Sequence):
 #Testing the windows generator (working)
 train_win,val_win,test_win=windows_tensor(dframe, dframe.columns.values[5:8],1)
 #Testing the observation generator 
-
+np.array(list(observations_generator(train_win))).shape
 
 pivot_index=np.random.choice(np.array(list(range(24,48))),size=1)[0]
 train_win[:,list(range((pivot_index-23),pivot_index+1)),:].shape
