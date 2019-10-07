@@ -23,44 +23,47 @@ def windows_tensor(dataframe, predictors, target, train_per=0.7, val_per=0.15):
 class observations_generator(keras.utils.Sequence):
     """
     Observation generator, it takes windows of 72 hours and from such widows it generates random observations, to predict 24 lead time taking 24 hours before.
-    data_source is an array with the location of a complete dataset
-    station is the name of the measurement station
-    predictors is an array of the desired predictor to be taken into account for the prediction model
-    target is the variable to be predicted
+    
+    data_source is the tensor array of predictors and target variable
+    
+    target is the variable index to be predicted 
+    
     batch_size in the size of the batches to be generated
     """
 
-    def __init__(self, data_source, 
+    def __init__(self, data_source, target, 
     samples_per_window=5, batch_size=64):
         self.data_source=data_source
+        self.target=target
         self.batch_size=batch_size
         self.samples_per_window=samples_per_window
         c=0
+        temp=0
         self.indexes=[]
         for i in range(0, int(self.data_source.shape[0]*self.samples_per_window)):
+            self.indexes.append((temp,np.random.choice(np.array(list(range(24,48))),size=1)[0]))
+            c=c+1
             if c==self.samples_per_window:
                 c=0
             if c==0:
-                temp=i
-            self.indexes.append((temp,np.random.choice(np.array(list(range(24,48))),size=1)[0]))
-            c=c+1
+                temp+=1
+                
     #Generate the tensor with
     def __len__(self):
         #Total lenght of the output
-        return(self.data_source.shape[0])
-        #Th following line is the legth of the array in case there is a restriction in batch size
-        #return(int(np.ceil(self.data_source.shape[0]*self.samples_per_window/self.batch_size)))
+        return(int(np.ceil(self.data_source.shape[0]*self.samples_per_window)))
     
     def __getitem__(self, idx):
-        ##Generador de observaciones, ojo aca con el significado de cada bache
-        self.x_batch= train_win[self.indexes[idx][0],list(range((self.indexes[idx][1]-23),self.indexes[idx][1]+1)),:]
-        return self.x_batch
+        ##Observations generator, Neural network input
+        self.x_batch = self.data_source[self.indexes[idx][0],list(range((self.indexes[idx][1]-23),self.indexes[idx][1]+1)),:]
+        self.y_batch = self.data_source[self.indexes[idx][0],int(self.indexes[idx][1]+24),self.target]
+        return np.array(self.x_batch), np.array(self.y_batch)
 
 #Testing zone
 #Testing the windows generator (working)
 train_win,val_win,test_win=windows_tensor(dframe, dframe.columns.values[5:8],1)
 #Testing the observation generator 
-np.array(list(observations_generator(train_win))).shape
+test_gen_x =(list(observations_generator(train_win,2)))
 
 pivot_index=np.random.choice(np.array(list(range(24,48))),size=1)[0]
 train_win[:,list(range((pivot_index-23),pivot_index+1)),:].shape
