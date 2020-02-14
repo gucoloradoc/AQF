@@ -3,11 +3,7 @@ import numpy as np
 import pandas as pd
 from tensorflow import keras
 
-
-dframe=pd.read_csv("data/Monterrey/imputed/data/NOROESTE.csv", 
-    parse_dates=["FECHA"], infer_datetime_format=True).set_index("FECHA")
-
-def windows_tensor(dataframe, predictors, target, train_per=0.7, val_per=0.15):
+def windows_tensor(dataframe, predictors, train_per=0.7, val_per=0.15):
     """
     This function generates the output arrays with the shape (:,0:72, predictors), to be used in the observations generator.
     Training, validation and testing datasets are returned.
@@ -58,12 +54,3 @@ class observations_generator(keras.utils.Sequence):
         self.x_batch = self.data_source[self.indexes[idx][0],list(range((self.indexes[idx][1]-23),self.indexes[idx][1]+1)),:]
         self.y_batch = self.data_source[self.indexes[idx][0],int(self.indexes[idx][1]+24),self.target]
         return np.array(self.x_batch), np.array(self.y_batch)
-
-#Testing zone
-#Testing the windows generator (working)
-train_win,val_win,test_win=windows_tensor(dframe, dframe.columns.values[5:8],1)
-#Testing the observation generator 
-test_gen_x =(list(observations_generator(train_win,2)))
-
-pivot_index=np.random.choice(np.array(list(range(24,48))),size=1)[0]
-train_win[:,list(range((pivot_index-23),pivot_index+1)),:].shape
