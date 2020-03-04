@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 from tensorflow import keras
@@ -54,3 +53,4 @@ class observations_generator(keras.utils.Sequence):
         self.x_batch = self.data_source[self.indexes[idx][0],list(range((self.indexes[idx][1]-23),self.indexes[idx][1]+1)),:]
         self.y_batch = self.data_source[self.indexes[idx][0],int(self.indexes[idx][1]+24),self.target]
         return np.array(self.x_batch), np.array(self.y_batch)
+
