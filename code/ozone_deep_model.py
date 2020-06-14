@@ -10,7 +10,7 @@ import os
 import sys
 import shutil
 
-tar_pollutant="PM10"
+tar_pollutant="O3"
 
 #%% creating folder to save outputs
 out_path="data/Monterrey/output"
@@ -166,8 +166,8 @@ model = Sequential()
 model.add(layers.Flatten(input_shape=(lookback // step, len(predictors))))
 model.add(layers.Dense(256, activation='sigmoid', name='sigmoid'))
 model.add(layers.Dense(128, activation='linear', name='linear'))
-model.add(layers.Dense(256, activation='relu', name='relu_1'))
-model.add(layers.Dense(64, activation='sigmoid', name='sigmoid_1'))
+model.add(layers.Dense(156, activation='relu', name='relu_1'))
+model.add(layers.Dense(256, activation='relu', name='relu_8'))
 model.add(layers.Dense(1, name='output'))
 
 #%% ANN model compilation

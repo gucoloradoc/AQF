@@ -10,7 +10,7 @@ import os
 import sys
 import shutil
 
-tar_pollutant="PM10"
+tar_pollutant="PM2.5"
 
 #%% creating folder to save outputs
 out_path="data/Monterrey/output"
@@ -167,12 +167,13 @@ model.add(layers.Flatten(input_shape=(lookback // step, len(predictors))))
 model.add(layers.Dense(256, activation='sigmoid', name='sigmoid'))
 model.add(layers.Dense(128, activation='linear', name='linear'))
 model.add(layers.Dense(256, activation='relu', name='relu_1'))
-model.add(layers.Dense(64, activation='sigmoid', name='sigmoid_1'))
+model.add(layers.Dense(64, activation='relu', name='relu_7'))
 model.add(layers.Dense(1, name='output'))
 
 #%% ANN model compilation
 sys.stdout = open(out_path+'/model_training_status_' + tar_pollutant+'.txt', 'w')
 model.compile(optimizer=Adam(), loss='mean_squared_error', metrics=[coeff_determination, RMSE_PM])
+
 
 #%% ANN model fitting
 
